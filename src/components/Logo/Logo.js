@@ -5,9 +5,9 @@ import './Logo.css';
 
 const Logo = () => {
   return (
-    <div className='ma3 mt0'>
-      <Tilt className="Tilt br2 shadow-2" options={{ max : 30 }} style={{ height: 200, width: 150 }} >
-        <div className="Tilt-inner pa3"><img style={{paddingTop: '5px'}} src={logo} alt="logo: outline of brain in head"/></div>
+    <div className='ma3'>
+      <Tilt className="Tilt br2 shadow-2" options={{ max : 30 }} style={{ height: 100, width: 100 }} >
+        <div className="Tilt-inner pa3"><img style={{height: 70, width: 80}} src={logo} alt="logo: outline of brain in head"/></div>
       </Tilt>
     </div>
   );
