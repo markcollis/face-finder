@@ -3,6 +3,7 @@ import Particles from 'react-particles-js';
 import Navigation from './components/Navigation/Navigation';
 // import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import ImageDropzone from './components/ImageDropzone/ImageDropzone';
 import ImageDisplay from './components/ImageDisplay/ImageDisplay';
 import Rank from './components/Rank/Rank';
 // import FRTest from './components/FRTest/FRTest';
@@ -134,9 +135,7 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        {
-        // <FRTest />
-        }
+        <ImageDropzone />
         <ImageDisplay
           detectFaces={this.detectFaces}
           imageUrl={this.state.imageUrl}
