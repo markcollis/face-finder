@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Canvas.css';
-import lenna from '../../Lennax2.png';
+// import lenna from '../../Lennax2.png';
 
 class Canvas extends Component {
   componentDidMount() {
@@ -14,7 +14,7 @@ class Canvas extends Component {
   render() {
     return (
       <div>
-        <img className='baseimage' ref='inputImage' src={lenna} alt='' />
+        <img className='baseimage' ref='inputImage' src='' alt='' />
         <canvas className='overlay' ref='canvas' />
       </div>
     );

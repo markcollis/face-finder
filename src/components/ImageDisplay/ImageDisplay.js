@@ -6,15 +6,15 @@ const ImageDisplay = ({detectFaces, imageUrl, minConfidence, onDecreaseThreshold
   return (
     <div className='ma4 mt0'>
       <div className='centred'>
-        <div className='form centred pa4 br3 shadow-5'>
-          <label htmlFor='minConfidence'>Min Confidence:</label>
-          <input disabled value={minConfidence} id='minConfidence' type='text' />
-          <button onClick={onDecreaseThreshold}>-</button>
-          <button onClick={onIncreaseThreshold}>+</button>
+        <div className='form centred pa3 br3 shadow-5'>
+          <p className='ma2'>Min Confidence:</p>
+          <input disabled value={minConfidence} id='minConfidence' type='text' className='w-10'/>
+          <button onClick={onDecreaseThreshold} className='w-10'>-</button>
+          <button onClick={onIncreaseThreshold} className='w-10'>+</button>
           <button
-            className='grow f4 link ph3 pv2 dib white bg-dark-blue'
+            className='w-30 grow f5 link ph3 pv2 dib white bg-dark-blue'
             onClick={detectFaces}
-          >Detect</button>
+          >Detect Faces</button>
         </div>
       </div>
       {
