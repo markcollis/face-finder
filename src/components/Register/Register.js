@@ -4,7 +4,7 @@ const Register = ({ onRouteChange }) => {
   return (
     <article className='br3 ba b--black-10 mv4 w-90 w-50-m w-33-l mw6 shadow-5 center bg-white-30'>
       <div className='pa4 black-80'>
-        <form className='measure center'>
+        <div className='measure center'>
           <fieldset id='signin' className='ba b--transparent ph0 mh0'>
             <legend className='f4 fw6 ph0 mh0'>Register for the face finder service</legend>
             <div className='mt3'>
@@ -43,7 +43,7 @@ const Register = ({ onRouteChange }) => {
               value='Register'
             />
           </div>
-        </form>
+        </div>
       </div>
     </article>
   );

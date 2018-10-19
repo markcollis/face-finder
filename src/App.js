@@ -46,7 +46,8 @@ class App extends Component {
       inputImageElement: {},
       outputCanvasElement: {},
       dragDropFile: [],
-      route: 'SignIn'
+      route: 'SignIn',
+      isSignedIn: false
     }
   }
 
@@ -134,15 +135,21 @@ class App extends Component {
   }
 
   onRouteChange = (route) => {
+    if (route === 'SignIn') {
+      this.setState({isSignedIn: false});
+    } else if (route === 'Main') {
+      this.setState({isSignedIn: true});
+    }
     this.setState({route: route});
   }
 
   render() {
+    const { isSignedIn, route, minConfidence, imageUrl } = this.state;
     return (
       <div className="App">
         <Particles className='particles' params={particlesOptions} />
-        <Navigation onRouteChange={this.onRouteChange} />
-        { this.state.route === 'Main'
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
+        { route === 'Main'
           ? <div>
               <Rank />
               <ImageLinkForm
@@ -154,17 +161,17 @@ class App extends Component {
               />
               <ImageFaceDetectForm
                 detectFaces={this.detectFaces}
-                minConfidence={this.state.minConfidence}
+                minConfidence={minConfidence}
                 onIncreaseThreshold={this.onIncreaseThreshold}
                 onDecreaseThreshold={this.onDecreaseThreshold}
               />
               <Canvas
                 canvasMounted={this.canvasMounted}
-                imageUrl={this.state.imageUrl}
+                imageUrl={imageUrl}
               />
             </div>
           : (
-            this.state.route === 'SignIn'
+            route === 'SignIn'
             ? <SignIn onRouteChange={this.onRouteChange} />
             : <Register onRouteChange={this.onRouteChange} />
             )
