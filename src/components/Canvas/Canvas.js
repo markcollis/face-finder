@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 import './Canvas.css';
-// import lenna from '../../Lennax2.png';
 
+// needs to be class to support refs
 class Canvas extends Component {
   componentDidMount() {
-    // const canvasElement = this.refs.canvas;
-    // const inputImageElement = this.refs.inputImage;
-    // console.log(canvasElement);
-    // console.log(inputImageElement);
+    // Send references to img and canvas elements back to App when created
     this.props.canvasMounted(this.refs.inputImage, this.refs.canvas);
   }
 
   render() {
     return (
       <div>
-        <img className='baseimage' ref='inputImage' src='' alt='' />
-        <canvas className='overlay' ref='canvas' />
+        <img className='width-80pc' ref='inputImage' src='' alt='' />
+        <canvas className='width-80pc' ref='canvas' alt='picture with face(s) detected' />
       </div>
     );
   }

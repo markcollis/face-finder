@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import Particles from 'react-particles-js';
+import * as faceapi from 'face-api.js';
+
 import Navigation from './components/Navigation/Navigation';
-// import Logo from './components/Logo/Logo';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
+import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import ImageDropzone from './components/ImageDropzone/ImageDropzone';
-import ImageDisplay from './components/ImageDisplay/ImageDisplay';
-import Rank from './components/Rank/Rank';
-// import FRTest from './components/FRTest/FRTest';
-import * as faceapi from 'face-api.js';
-import './App.css';
-// import lenna from './Lennax2.png';
+import ImageFaceDetectForm from './components/ImageFaceDetectForm/ImageFaceDetectForm';
 import Canvas from './components/Canvas/Canvas';
+
+import './App.css';
 
 const particlesOptions = {
   particles: {
@@ -23,11 +24,11 @@ const particlesOptions = {
     },
     move: {
       enable: true,
-      speed: 8,
+      speed: 4,
       out_mode: 'bounce'
     },
     size: {
-      value: 6,
+      value: 5,
       random: true
     }
   }
@@ -41,30 +42,50 @@ class App extends Component {
       imageUrl: '',
       minConfidence: 0.7,
       maxResults: 25,
+      withScore: true,
       inputImageElement: {},
-      outputCanvasElement: {}
+      outputCanvasElement: {},
+      dragDropFile: [],
+      route: 'SignIn'
     }
   }
 
   async componentDidMount() {
     await faceapi.loadFaceDetectionModel('/models');
-    await console.log('models loaded');
+    await console.log('face detection model loaded');
+    // console.log('models commented out');
   }
 
-  onInputChange = (event) => {
+  onUrlInputChange = (event) => {
     this.setState({input: event.target.value});
-    console.log(event.target.value);
+    // console.log(event.target.value);
   }
 
-  onButtonSubmit = () => {
+  onUrlButtonSubmit = () => {
     console.log('click submit button');
     const el = this.state.inputImageElement;
+    const canv = this.state.outputCanvasElement;
     this.setState({imageUrl: this.state.input}, () => {
       console.log('callback imageUrl: ', this.state.imageUrl);
       el.crossOrigin='anonymous';
       el.src=this.state.imageUrl;
+      canv.style.display = 'none';
+      el.style.display = 'inline';
       // need error handling: 1) invalid URL, 2) CORS restrictions.
       // offer a CORS proxy alternative (https://cors-anywhere.herokuapp.com)
+    });
+  }
+
+  onDropFile = (file) => {
+    console.log('file dropped');
+    const el = this.state.inputImageElement;
+    const canv = this.state.outputCanvasElement;
+    this.setState({
+      dragDropFile: file
+    }, () => {
+      el.src = this.state.dragDropFile[0].preview;
+      canv.style.display = 'none';
+      el.style.display = 'inline';
     });
   }
 
@@ -72,22 +93,18 @@ class App extends Component {
     console.log('+ clicked');
     const newMinConfidence = Math.min(faceapi.round(this.state.minConfidence + 0.1), 1.0);
     this.setState({minConfidence: newMinConfidence});
-    // console.log('new minConfidence: ', this.state.minConfidence);
   }
 
   onDecreaseThreshold = () => {
     console.log('- clicked');
     const newMinConfidence = Math.max(faceapi.round(this.state.minConfidence - 0.1), 0.1);
     this.setState({minConfidence: newMinConfidence});
-    // console.log('new minConfidence: ', this.state.minConfidence);
   }
 
   canvasMounted = (inputImageElement, outputCanvasElement) => {
-    console.log('canvas mounted!');
-// outputCanvasElement.style.display = 'none';
-    // console.log(inputImageElement);
+    console.log('output image and canvas mounted');
+    outputCanvasElement.style.display = 'none';
     this.setState({inputImageElement: inputImageElement});
-    // console.log(outputCanvas);
     this.setState({outputCanvasElement: outputCanvasElement});
   }
 
@@ -97,56 +114,61 @@ class App extends Component {
     const canvasForResults = this.state.outputCanvasElement;
     const minConf = this.state.minConfidence;
     const maxRes = this.state.maxResults;
-    // console.log(imageElementToProcess);
-    // console.log(canvasForResults);
+    const withScore = this.state.withScore;
     canvasForResults.width = imageElementToProcess.width;
     canvasForResults.height = imageElementToProcess.height;
-    this.runDetector(imageElementToProcess, canvasForResults, minConf, maxRes);
+    this.runDetector(imageElementToProcess, canvasForResults, minConf, maxRes, withScore);
   }
 
-  async runDetector(img, canvas, minConf, maxRes) {
+  async runDetector(img, canvas, minConf, maxRes, withScore) {
     const detections = await faceapi.ssdMobilenetv1(img, minConf, maxRes);
     console.log(detections);
     const detectionsForSize = await detections.map(det => det.forSize(img.width, img.height));
     const currentWidth = img.width;
     const currentHeight = img.height;
-// img.style.display = 'none';
-
-    // console.log(canvas.style.top);
-    // console.log(img.height);
-    // canvas.style.top = '-' + img.height + 'px';
+    img.style.display = 'none';
     const ctx = canvas.getContext('2d');
-    // console.log(ctx);
     ctx.drawImage(img, 0, 0, currentWidth, currentHeight);
-    await faceapi.drawDetection(canvas, detectionsForSize, {withScore: true});
-// canvas.style.display = 'inline';
+    await faceapi.drawDetection(canvas, detectionsForSize, withScore);
+    canvas.style.display = 'inline';
+  }
+
+  onRouteChange = (route) => {
+    this.setState({route: route});
   }
 
   render() {
     return (
       <div className="App">
         <Particles className='particles' params={particlesOptions} />
-        <Navigation />
-        {
-        // <Logo />
+        <Navigation onRouteChange={this.onRouteChange} />
+        { this.state.route === 'Main'
+          ? <div>
+              <Rank />
+              <ImageLinkForm
+                onInputChange={this.onUrlInputChange}
+                onButtonSubmit={this.onUrlButtonSubmit}
+              />
+              <ImageDropzone
+                onDropFile={this.onDropFile}
+              />
+              <ImageFaceDetectForm
+                detectFaces={this.detectFaces}
+                minConfidence={this.state.minConfidence}
+                onIncreaseThreshold={this.onIncreaseThreshold}
+                onDecreaseThreshold={this.onDecreaseThreshold}
+              />
+              <Canvas
+                canvasMounted={this.canvasMounted}
+                imageUrl={this.state.imageUrl}
+              />
+            </div>
+          : (
+            this.state.route === 'SignIn'
+            ? <SignIn onRouteChange={this.onRouteChange} />
+            : <Register onRouteChange={this.onRouteChange} />
+            )
         }
-        <Rank />
-        <ImageLinkForm
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}
-        />
-        <ImageDropzone />
-        <ImageDisplay
-          detectFaces={this.detectFaces}
-          imageUrl={this.state.imageUrl}
-          minConfidence={this.state.minConfidence}
-          onIncreaseThreshold={this.onIncreaseThreshold}
-          onDecreaseThreshold={this.onDecreaseThreshold}
-        />
-        <Canvas
-          canvasMounted={this.canvasMounted}
-          imageUrl={this.state.imageUrl}
-        />
       </div>
     );
   }

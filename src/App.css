@@ -7,6 +7,10 @@
   justify-content: center;
 }
 
+.formwidth {
+  width: 650px;
+}
+
 .particles {
   position: fixed;
   top: 0;

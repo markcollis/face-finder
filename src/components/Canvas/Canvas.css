@@ -1,7 +1,3 @@
-.baseimage {
-  max-width: 80%;
-}
-
-.overlay {
+.width-80pc {
   max-width: 80%;
 }
