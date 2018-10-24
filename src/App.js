@@ -47,14 +47,35 @@ class App extends Component {
       outputCanvasElement: {},
       dragDropFile: [],
       route: 'SignIn',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
   }
 
   async componentDidMount() {
+    // fetch('http://localhost:3001')
+    // .then(response => response.json())
+    // .then(console.log);
     await faceapi.loadFaceDetectionModel('/models');
     await console.log('face detection model loaded');
     // console.log('models commented out');
+  }
+
+  loadUser = (data) => {
+    console.log(data);
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }});
   }
 
   onUrlInputChange = (event) => {
@@ -132,6 +153,17 @@ class App extends Component {
     ctx.drawImage(img, 0, 0, currentWidth, currentHeight);
     await faceapi.drawDetection(canvas, detectionsForSize, withScore);
     canvas.style.display = 'inline';
+    await fetch('http://localhost:3001/image', {
+      method: 'put',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        id: this.state.user.id
+      })
+    })
+      .then(response => response.json())
+      .then(count => {
+        this.setState(Object.assign(this.state.user, {entries: count}))
+      });
   }
 
   onRouteChange = (route) => {
@@ -151,7 +183,7 @@ class App extends Component {
         <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
         { route === 'Main'
           ? <div>
-              <Rank />
+              <Rank name={this.state.user.name} entries={this.state.user.entries} />
               <ImageLinkForm
                 onInputChange={this.onUrlInputChange}
                 onButtonSubmit={this.onUrlButtonSubmit}
@@ -172,8 +204,8 @@ class App extends Component {
             </div>
           : (
             route === 'SignIn'
-            ? <SignIn onRouteChange={this.onRouteChange} />
-            : <Register onRouteChange={this.onRouteChange} />
+            ? <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
+            : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
             )
         }
       </div>
