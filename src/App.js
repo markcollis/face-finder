@@ -16,10 +16,10 @@ import './App.css';
 const particlesOptions = {
   particles: {
     number: {
-      value: 100,
+      value: 32,
       density: {
         enable: true,
-        value_area: 800
+        value_area: 512
       }
     },
     move: {
@@ -29,7 +29,7 @@ const particlesOptions = {
     },
     size: {
       value: 5,
-      random: true
+      random: false
     }
   }
 };

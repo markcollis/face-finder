@@ -28,10 +28,10 @@ class SignIn extends Component {
       })
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then((user) => {
         // need to alter this as response is now user object
-        if (data.id) {
-          this.props.loadUser(data);
+        if (user.id) {
+          this.props.loadUser(user);
           this.props.onRouteChange('Main');
       }
     });
