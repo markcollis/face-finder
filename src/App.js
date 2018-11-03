@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Particles from 'react-particles-js';
+// import Particles from 'react-particles-js';
+import ParticleAnimation from 'react-particle-animation';
 import * as faceapi from 'face-api.js';
 
 import Navigation from './components/Navigation/Navigation';
@@ -13,26 +14,26 @@ import Canvas from './components/Canvas/Canvas';
 
 import './App.css';
 
-const particlesOptions = {
-  particles: {
-    number: {
-      value: 32,
-      density: {
-        enable: true,
-        value_area: 512
-      }
-    },
-    move: {
-      enable: true,
-      speed: 4,
-      out_mode: 'bounce'
-    },
-    size: {
-      value: 5,
-      random: false
-    }
-  }
-};
+// const particlesOptions = {
+//   particles: {
+//     number: {
+//       value: 32,
+//       density: {
+//         enable: true,
+//         value_area: 512
+//       }
+//     },
+//     move: {
+//       enable: true,
+//       speed: 4,
+//       out_mode: 'bounce'
+//     },
+//     size: {
+//       value: 5,
+//       random: false
+//     }
+//   }
+// };
 
 class App extends Component {
   constructor() {
@@ -45,7 +46,8 @@ class App extends Component {
       withScore: true,
       inputImageElement: {},
       outputCanvasElement: {},
-      dragDropFile: [],
+      dragDropFile: {},
+      filePreview: {},
       route: 'SignIn',
       isSignedIn: false,
       user: {
@@ -98,14 +100,18 @@ class App extends Component {
     });
   }
 
-  onDropFile = (file) => {
+  onDropFile = (files) => {
     console.log('file dropped');
+    console.log(files);
+    const file = files[0];
+    console.log(file);
     const el = this.state.inputImageElement;
     const canv = this.state.outputCanvasElement;
     this.setState({
-      dragDropFile: file
+      dragDropFile: file,
+      filePreview: URL.createObjectURL(file)
     }, () => {
-      el.src = this.state.dragDropFile[0].preview;
+      el.src = this.state.filePreview;
       canv.style.display = 'none';
       el.style.display = 'inline';
     });
@@ -176,10 +182,20 @@ class App extends Component {
   }
 
   render() {
+    // <Particles className='particles' params={particlesOptions} />
     const { isSignedIn, route, minConfidence, imageUrl } = this.state;
     return (
       <div className="App">
-        <Particles className='particles' params={particlesOptions} />
+        <ParticleAnimation
+          numParticles={100}
+          lineWidth={3}
+          particleSpeed={0.5}
+          particleRadius={1}
+          interactive={false}
+          background={{ r: 51, g: 102, b: 153, a: 255 }}
+          color={{ r: 255, g: 255, b: 255, a:255 }}
+          className="particles"
+        />
         <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
         { route === 'Main'
           ? <div>
