@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-// import Particles from 'react-particles-js';
 import ParticleAnimation from 'react-particle-animation';
 import * as faceapi from 'face-api.js';
-
 import Navigation from './components/Navigation/Navigation';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
@@ -11,29 +9,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import ImageDropzone from './components/ImageDropzone/ImageDropzone';
 import ImageFaceDetectForm from './components/ImageFaceDetectForm/ImageFaceDetectForm';
 import Canvas from './components/Canvas/Canvas';
-
 import './App.css';
-
-// const particlesOptions = {
-//   particles: {
-//     number: {
-//       value: 32,
-//       density: {
-//         enable: true,
-//         value_area: 512
-//       }
-//     },
-//     move: {
-//       enable: true,
-//       speed: 4,
-//       out_mode: 'bounce'
-//     },
-//     size: {
-//       value: 5,
-//       random: false
-//     }
-//   }
-// };
 
 class App extends Component {
   constructor() {
