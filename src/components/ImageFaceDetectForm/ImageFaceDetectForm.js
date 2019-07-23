@@ -1,6 +1,14 @@
 import React from 'react';
 
-const ImageFaceDetectForm = ({detectFaces, inputSize, onDecreaseInputSize, onIncreaseInputSize, scoreThreshold, onDecreaseThreshold, onIncreaseThreshold}) => {
+const ImageFaceDetectForm = ({
+  detectFaces,
+  inputSize,
+  onDecreaseInputSize,
+  onIncreaseInputSize,
+  scoreThreshold,
+  onDecreaseThreshold,
+  onIncreaseThreshold
+}) => {
   return (
     <div className='ma4 mt0'>
       <div className='centred'>

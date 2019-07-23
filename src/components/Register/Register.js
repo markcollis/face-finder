@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FACE_FINDER_API_URI } from '../../config';
 
 class Register extends Component {
   constructor(props) {
@@ -23,9 +24,7 @@ class Register extends Component {
   }
 
   onSubmitRegister = () => {
-    console.log(this.state);
-
-    fetch('http://localhost:3001/register', {
+    fetch(`${FACE_FINDER_API_URI}/register`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -39,9 +38,11 @@ class Register extends Component {
         if (user.id) {
           this.props.loadUser(user);
           this.props.onRouteChange('Main');
+      } else {
+        console.log('Error:', user);
       }
-    });
-
+    })
+    .catch(err => console.log(err));
   }
 
   render() {

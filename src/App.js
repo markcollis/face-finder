@@ -12,21 +12,23 @@ import ImageFaceDetectForm from './components/ImageFaceDetectForm/ImageFaceDetec
 import Canvas from './components/Canvas/Canvas';
 import './App.css';
 
+import { CORS_PROXY_URI, FACE_FINDER_API_URI } from './config';
+
 const initialState = {
-  input: '',
-  imageUrl: '',
-  scoreThreshold: 0.5,
-  inputSize: 416,
-  showImg: true,
-  showCanvas: true,
-  inputImageElement: {},
-  outputCanvasElement: {},
-  canvasWidth: 0,
   canvasHeight: 0,
+  canvasWidth: 0,
   filePreview: {},
-  withScore: true,
-  route: 'SignIn',
+  imageUrl: '',
+  input: '',
+  inputImageElement: {},
+  inputSize: 416,
   isSignedIn: false,
+  outputCanvasElement: {},
+  route: 'SignIn',
+  scoreThreshold: 0.5,
+  showCanvas: true,
+  showImg: true,
+  withScore: true,
   user: {
     id: '',
     name: '',
@@ -43,9 +45,9 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    await faceapi.loadTinyFaceDetectorModel('/models');
-    // await faceapi.loadFaceLandmarkModel('/models');
-    await console.log('face detection model loaded');
+    await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+    await faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models');
+    console.log('face detection models loaded');
   }
 
   loadUser = (data) => {
@@ -64,29 +66,25 @@ class App extends Component {
   }
 
   onUrlButtonSubmit = () => {
-    const corsPrefix = 'http://localhost:8080/';
-    console.log('click submit button');
+    // console.log('click submit button');
     this.setState({imageUrl: this.state.input}, () => {
       console.log('callback imageUrl: ', this.state.imageUrl);
       const checkWidth = this.state.inputImageElement.width;
-      console.log('width:', checkWidth);
+      // console.log('width:', checkWidth);
       if (checkWidth === 0) {
-        const updatedUrl = corsPrefix + this.state.input;
+        const updatedUrl = CORS_PROXY_URI + this.state.input;
         this.setState({imageUrl: updatedUrl }, () => {
-          console.log('using CORS proxy');
+          console.log('using CORS proxy', updatedUrl);
         });
       }
       this.setState({showImg: true, showCanvas: false});
-      // offer a CORS proxy alternative (https://cors-anywhere.herokuapp.com)
-      // or local - currently localhost:8080
     });
   }
 
   onDropFile = (files) => {
-    console.log('file dropped');
-    console.log(files);
+    // console.log('file dropped');
+    // console.log(files);
     const file = files[0];
-    console.log(file);
     this.setState({
       filePreview: URL.createObjectURL(file)
     }, () => {
@@ -96,25 +94,25 @@ class App extends Component {
   }
 
   onIncreaseInputSize = () => {
-    console.log('+ clicked');
+    // console.log('+ clicked');
     const newInputSize = Math.min((this.state.inputSize + 96), 608);
     this.setState({inputSize: newInputSize});
   }
 
   onDecreaseInputSize = () => {
-    console.log('- clicked');
+    // console.log('- clicked');
     const newInputSize = Math.max((this.state.inputSize - 96), 224);
     this.setState({inputSize: newInputSize});
   }
 
   onIncreaseThreshold = () => {
-    console.log('+ clicked');
+    // console.log('+ clicked');
     const newScoreThreshold = Math.min(faceapi.round(this.state.scoreThreshold + 0.1), 1.0);
     this.setState({scoreThreshold: newScoreThreshold});
   }
 
   onDecreaseThreshold = () => {
-    console.log('- clicked');
+    // console.log('- clicked');
     const newScoreThreshold = Math.max(faceapi.round(this.state.scoreThreshold - 0.1), 0.1);
     this.setState({scoreThreshold: newScoreThreshold});
   }
@@ -126,7 +124,7 @@ class App extends Component {
   }
 
   detectFaces = () => {
-    console.log('click detect faces');
+    // console.log('detecting faces');
     const { inputImageElement, outputCanvasElement, inputSize, scoreThreshold, withScore } = this.state;
     this.setState({canvasWidth: inputImageElement.width});
     this.setState({canvasHeight: inputImageElement.height});
@@ -135,27 +133,20 @@ class App extends Component {
 
   async runDetector(img, canvas, inputSize, minScore, withScore) {
     const detectorOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: inputSize, scoreThreshold: minScore });
-    const detections = await faceapi.detectAllFaces(img, detectorOptions);
-    console.log(detections);
-    const detectionsForSize = await detections.map(det => det.forSize(img.width, img.height));
+    const useTinyModel = true;
+    const displaySize = { width: img.width, height: img.height };
+    const detections = await faceapi
+      .detectAllFaces(img, detectorOptions)
+      .withFaceLandmarks(useTinyModel);
+    console.log('Detections:', detections);
+    const resizedDetections = faceapi.resizeResults(detections, displaySize);
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
-    await faceapi.drawDetection(canvas, detectionsForSize, withScore);
+    faceapi.draw.drawDetections(canvas, resizedDetections, withScore);
+    faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     this.setState({showImg: false, showCanvas: true});
 
-    // landmarks trial - not working (type error in drawLandmarks.js)
-    // const detectionsWithLandmarks = await faceapi.detectAllFaces(img, detectorOptions).withFaceLandmarks();
-    // console.log(detectionsWithLandmarks);
-    // const detectionsWithLandmarksForSize = await detectionsWithLandmarks.map(det => det.forSize(img.width, img.height));
-    // const currentWidth = img.width;
-    // const currentHeight = img.height;
-    // img.style.display = 'none';
-    // const ctx = canvas.getContext('2d');
-    // ctx.drawImage(img, 0, 0, currentWidth, currentHeight);
-    // await faceapi.drawLandmarks(canvas, detectionsWithLandmarks, { drawLines: true});
-    // canvas.style.display = 'inline';
-
-    await fetch('http://localhost:3001/image', {
+    await fetch(`${FACE_FINDER_API_URI}/image`, {
       method: 'put',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
