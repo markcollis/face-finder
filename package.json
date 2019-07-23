@@ -6,9 +6,9 @@
     "face-api.js": "^0.15.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-dropzone": "^7.0.1",
+    "react-dropzone": "^10.1.6",
     "react-particle-animation": "^1.0.1",
-    "react-scripts": "^2.1.1",
+    "react-scripts": "^3.0.1",
     "react-tilt": "^0.1.4",
     "tachyons": "^4.11.1"
   },
