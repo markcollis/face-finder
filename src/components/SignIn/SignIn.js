@@ -51,8 +51,7 @@ class SignIn extends Component {
                 onChange={this.onEmailChange}
                 className='pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100'
                 type='email'
-                name='emailaddress'
-                id='emailaddress'
+                value={this.state.signInEmail}
                 />
               </div>
               <div className='mv3'>
@@ -61,8 +60,7 @@ class SignIn extends Component {
                 onChange={this.onPasswordChange}
                 className='b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100'
                 type='password'
-                name='password'
-                id='password'
+                value={this.state.signInPassword}
                 />
               </div>
             </fieldset>

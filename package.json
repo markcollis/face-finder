@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "face-api.js": "^0.15.1",
-    "face-recognition": "^0.9.3",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-dropzone": "^7.0.1",

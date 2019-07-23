@@ -4,6 +4,7 @@ import * as faceapi from 'face-api.js';
 import Navigation from './components/Navigation/Navigation';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
+import Profile from './components/Profile/Profile';
 import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import ImageDropzone from './components/ImageDropzone/ImageDropzone';
@@ -178,7 +179,7 @@ class App extends Component {
   }
 
   render() {
-    const { isSignedIn, route, inputSize, scoreThreshold, imageUrl, canvasWidth, canvasHeight, showImg, showCanvas } = this.state;
+    const { user, isSignedIn, route, inputSize, scoreThreshold, imageUrl, canvasWidth, canvasHeight, showImg, showCanvas } = this.state;
     return (
       <div className="App">
         <ParticleAnimation
@@ -194,7 +195,9 @@ class App extends Component {
         <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
         { route === 'Main'
           ? <div>
-              <Rank name={this.state.user.name} entries={this.state.user.entries} />
+              <Rank
+                name={user.name}
+                entries={user.entries} />
               <ImageLinkForm
                 onInputChange={this.onUrlInputChange}
                 onButtonSubmit={this.onUrlButtonSubmit}
@@ -221,10 +224,14 @@ class App extends Component {
               />
             </div>
           : (
-            route === 'SignIn'
-            ? <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
-            : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
+            route === 'Profile'
+            ? <Profile user={user} />
+            : (
+              route === 'SignIn'
+              ? <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
+              : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
             )
+          )
         }
       </div>
     );

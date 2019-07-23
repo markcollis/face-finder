@@ -6,10 +6,20 @@ const Navigation = ({ onRouteChange, isSignedIn }) => {
     return (
       <nav style={{display: 'flex', justifyContent: 'space-between'}}>
         <Logo />
-        <p
-          className='f3 link dim black underline pa3 pointer'
-          onClick={() => onRouteChange('SignIn')}
-        >Sign Out</p>
+        <span className='flex justify-between'>
+          <p
+            className='f3 link dim black underline pa3 pointer'
+            onClick={() => onRouteChange('Main')}
+          >Find Faces</p>
+          <p
+            className='f3 link dim black underline pa3 pointer'
+            onClick={() => onRouteChange('Profile')}
+          >Profile</p>
+          <p
+            className='f3 link dim black underline pa3 pointer'
+            onClick={() => onRouteChange('SignIn')}
+          >Sign Out</p>
+        </span>
       </nav>
     );
   } else {
