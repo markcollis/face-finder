@@ -72,7 +72,7 @@ class App extends Component {
       const checkWidth = this.state.inputImageElement.width;
       // console.log('width:', checkWidth);
       if (checkWidth === 0) {
-        const updatedUrl = CORS_PROXY_URI + this.state.input;
+        const updatedUrl = `${CORS_PROXY_URI}/${this.state.input}`;
         this.setState({imageUrl: updatedUrl }, () => {
           console.log('using CORS proxy', updatedUrl);
         });
