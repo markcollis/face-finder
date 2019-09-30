@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import ParticleAnimation from 'react-particle-animation';
 import * as faceapi from 'face-api.js';
 
-import Canvas from './components/Canvas/Canvas';
 import ImageDropzone from './components/ImageDropzone/ImageDropzone';
 import ImageFaceDetectForm from './components/ImageFaceDetectForm/ImageFaceDetectForm';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import InputImage from './components/InputImage/InputImage';
 import Navigation from './components/Navigation/Navigation';
+import OutputCanvas from './components/OutputCanvas/OutputCanvas';
 import Profile from './components/Profile/Profile';
 import Rank from './components/Rank/Rank';
 import Register from './components/Register/Register';
@@ -20,10 +21,8 @@ const initialState = {
   canvasWidth: 0,
   imageUrl: '',
   input: '',
-  inputImageElement: {},
   inputSize: 416,
   isSignedIn: false,
-  outputCanvasElement: {},
   route: 'SignIn',
   scoreThreshold: 0.5,
   showCanvas: true,
@@ -42,6 +41,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = initialState;
+    this.inputImageRef = createRef();
+    this.outputCanvasRef = createRef();
   }
 
   async componentDidMount() {
@@ -67,10 +68,9 @@ class App extends Component {
   }
 
   onUrlButtonSubmit = () => {
-    const { input, inputImageElement } = this.state;
+    const { input } = this.state;
     this.setState({ imageUrl: input }, () => {
-      // console.log('callback imageUrl: ', this.state.imageUrl);
-      const checkWidth = inputImageElement.width;
+      const checkWidth = this.inputImageRef.current.width;
       if (checkWidth === 0) {
         const updatedUrl = `${CORS_PROXY_URI}/${input}`;
         this.setState({ imageUrl: updatedUrl }, () => {
@@ -115,26 +115,19 @@ class App extends Component {
     this.setState({ scoreThreshold: newScoreThreshold });
   }
 
-  canvasMounted = ({ inputImageElement, outputCanvasElement }) => {
-    this.setState({ inputImageElement, outputCanvasElement });
-  }
-
   detectFaces = () => {
-    // console.log('detecting faces');
     const {
-      inputImageElement,
-      outputCanvasElement,
       inputSize,
       scoreThreshold,
       withScore,
     } = this.state;
     this.setState({
-      canvasHeight: inputImageElement.height,
-      canvasWidth: inputImageElement.width,
+      canvasHeight: this.inputImageRef.current.height,
+      canvasWidth: this.inputImageRef.current.width,
     });
     this.runDetector({
-      img: inputImageElement,
-      canvas: outputCanvasElement,
+      img: this.inputImageRef.current,
+      canvas: this.outputCanvasRef.current,
       inputSize,
       scoreThreshold,
       withScore,
@@ -241,12 +234,15 @@ class App extends Component {
           onIncreaseThreshold={this.onIncreaseThreshold}
           onDecreaseThreshold={this.onDecreaseThreshold}
         />
-        <Canvas
-          canvasMounted={this.canvasMounted}
+        <InputImage
+          ref={this.inputImageRef}
           imageUrl={imageUrl}
-          canvasWidth={canvasWidth}
-          canvasHeight={canvasHeight}
           showImg={showImg}
+        />
+        <OutputCanvas
+          ref={this.outputCanvasRef}
+          canvasHeight={canvasHeight}
+          canvasWidth={canvasWidth}
           showCanvas={showCanvas}
         />
       </div>
