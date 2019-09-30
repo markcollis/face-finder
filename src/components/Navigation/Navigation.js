@@ -1,44 +1,75 @@
 import React from 'react';
-import Logo from '../Logo/Logo';
+import PropTypes from 'prop-types';
 
-const Navigation = ({ onRouteChange, isSignedIn }) => {
+import Logo from '../Logo/Logo';
+import './Navigation.css';
+
+const Navigation = ({ isSignedIn, onRouteChange }) => {
   if (isSignedIn) {
     return (
-      <nav style={{display: 'flex', justifyContent: 'space-between'}}>
+      <nav className="nav-parent">
         <Logo />
-        <span className='flex justify-between'>
-          <p
-            className='f3 link dim black underline pa3 pointer'
+        <span className="nav-menu">
+          <div
+            role="button"
+            className="f3 link dim black underline pa3 pointer"
             onClick={() => onRouteChange('Main')}
-          >Find Faces</p>
-          <p
-            className='f3 link dim black underline pa3 pointer'
+            onKeyPress={() => onRouteChange('Main')}
+            tabIndex={0}
+          >
+          Find Faces
+          </div>
+          <div
+            role="button"
+            className="f3 link dim black underline pa3 pointer"
             onClick={() => onRouteChange('Profile')}
-          >Profile</p>
-          <p
-            className='f3 link dim black underline pa3 pointer'
+            onKeyPress={() => onRouteChange('Profile')}
+            tabIndex={0}
+          >
+          Profile
+          </div>
+          <div
+            role="button"
+            className="f3 link dim black underline pa3 pointer"
             onClick={() => onRouteChange('SignIn')}
-          >Sign Out</p>
-        </span>
-      </nav>
-    );
-  } else {
-    return (
-      <nav className='flex justify-between'>
-        <Logo />
-        <span className='flex justify-between'>
-          <p
-            className='f3 link dim black underline pa3 pointer'
-            onClick={() => onRouteChange('SignIn')}
-          >Sign In</p>
-          <p
-            className='f3 link dim black underline pa3 pointer'
-            onClick={() => onRouteChange('Register')}
-          >Register</p>
+            onKeyPress={() => onRouteChange('SignIn')}
+            tabIndex={0}
+          >
+          Sign Out
+          </div>
         </span>
       </nav>
     );
   }
-}
+  return (
+    <nav className="nav-parent">
+      <Logo />
+      <span className="nav-menu">
+        <div
+          role="button"
+          className="f3 link dim black underline pa3 pointer"
+          onClick={() => onRouteChange('SignIn')}
+          onKeyPress={() => onRouteChange('SignIn')}
+          tabIndex={0}
+        >
+        Sign In
+        </div>
+        <div
+          role="button"
+          className="f3 link dim black underline pa3 pointer"
+          onClick={() => onRouteChange('Register')}
+          onKeyPress={() => onRouteChange('Register')}
+          tabIndex={0}
+        >
+        Register
+        </div>
+      </span>
+    </nav>
+  );
+};
+Navigation.propTypes = {
+  isSignedIn: PropTypes.bool.isRequired,
+  onRouteChange: PropTypes.func.isRequired,
+};
 
 export default Navigation;

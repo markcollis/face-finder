@@ -1,70 +1,77 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const ImageFaceDetectForm = ({
   detectFaces,
   inputSize,
   onDecreaseInputSize,
-  onIncreaseInputSize,
-  scoreThreshold,
   onDecreaseThreshold,
-  onIncreaseThreshold
+  onIncreaseInputSize,
+  onIncreaseThreshold,
+  scoreThreshold,
 }) => {
   return (
-    <div className='ma4 mt0'>
-      <div className='centred'>
-        <div className='formwidth mw8 bg-white-30 centred pa3 br3 shadow-5'>
-          <p>
-            <input
-              className='w-40 bg-transparent black tc b--none'
-              disabled
-              type='text'
-              value='Input Size'
-            />
+    <div className="ma4 mt0">
+      <div className="centred">
+        <div className="formwidth mw8 bg-white-30 centred pa3 br3 shadow-5">
+          <p className="w-40 bg-transparent black tc b--none">
+            <span>Input size</span>
+            <br />
             <button
-              className='w-10 f6 fw8'
+              type="button"
+              className="w-10 f6 fw8"
               onClick={onDecreaseInputSize}
-            >-</button>
-            <input
-              className='w-10 bg-transparent black tc b--none f6 fw8'
-              disabled
-              type='text'
-              value={inputSize}
-            />
+            >
+            -
+            </button>
+            <span className="w-10 bg-transparent black tc b--none f6 fw8">{inputSize}</span>
             <button
-              className='w-10 f6 fw8'
+              type="button"
+              className="w-10 f6 fw8"
               onClick={onIncreaseInputSize}
-            >+</button>
+            >
+            +
+            </button>
           </p>
-          <p>
-            <input
-              className='w-40 bg-transparent black tc b--none'
-              disabled
-              type='text'
-              value='Confidence Threshold'
-            />
+          <p className="w-40 bg-transparent black tc b--none">
+            <span>Confidence threshold</span>
+            <br />
             <button
-              className='w-10 f6 fw8'
+              type="button"
+              className="w-10 f6 fw8"
               onClick={onDecreaseThreshold}
-            >-</button>
-            <input
-              className='w-10 bg-transparent black tc b--none f6 fw8'
-              disabled
-              type='text'
-              value={scoreThreshold}
-            />
+            >
+            -
+            </button>
+            <span className="w-10 bg-transparent black tc b--none f6 fw8">{scoreThreshold}</span>
             <button
-              className='w-10 f6 fw8'
+              type="button"
+              className="w-10 f6 fw8"
               onClick={onIncreaseThreshold}
-            >+</button>
+            >
+            +
+            </button>
           </p>
           <button
-            className='w-30 grow f5 link ph3 pv2 dib white bg-dark-blue'
+            type="button"
+            className="w-30 grow f5 link ph3 pv2 dib white bg-dark-blue"
             onClick={detectFaces}
-          >Detect Faces</button>
+          >
+          Detect Faces
+          </button>
         </div>
       </div>
     </div>
   );
-}
+};
+ImageFaceDetectForm.propTypes = {
+  detectFaces: PropTypes.func.isRequired,
+  inputSize: PropTypes.number.isRequired,
+  onDecreaseInputSize: PropTypes.func.isRequired,
+  onDecreaseThreshold: PropTypes.func.isRequired,
+  onIncreaseInputSize: PropTypes.func.isRequired,
+  onIncreaseThreshold: PropTypes.func.isRequired,
+  scoreThreshold: PropTypes.number.isRequired,
+};
 
 export default ImageFaceDetectForm;

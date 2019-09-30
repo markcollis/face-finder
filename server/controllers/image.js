@@ -6,7 +6,6 @@ const handleImagePut = db => (req, res) => {
     .increment('entries', 1)
     .returning('entries')
     .then((entries) => {
-      console.log('Successfully analysed image, new entries:', entries[0]);
       res.json(entries[0]);
     })
     .catch((err) => {
