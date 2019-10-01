@@ -57,7 +57,7 @@ class SignIn extends Component {
                 <label className="db fw6 lh-copy f6" htmlFor="emailaddress">Email</label>
                 <input
                   onChange={this.onEmailChange}
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  className="pa2 ba input-reset bg-transparent hover-bg-black hover-white w-100"
                   type="email"
                   value={signInEmail}
                 />
@@ -66,7 +66,7 @@ class SignIn extends Component {
                 <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
                 <input
                   onChange={this.onPasswordChange}
-                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  className="b pa2 ba input-reset bg-transparent hover-bg-black hover-white w-100"
                   type="password"
                   value={signInPassword}
                 />

@@ -2,6 +2,7 @@ import React, { Component, createRef } from 'react';
 import ParticleAnimation from 'react-particle-animation';
 import * as faceapi from 'face-api.js';
 
+import DetectionResults from './components/DetectionResults/DetectionResults';
 import ImageDropzone from './components/ImageDropzone/ImageDropzone';
 import ImageFaceDetectForm from './components/ImageFaceDetectForm/ImageFaceDetectForm';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -19,13 +20,16 @@ import { CORS_PROXY_URI, FACE_FINDER_API_URI } from './config';
 const initialState = {
   canvasHeight: 0,
   canvasWidth: 0,
+  detections: [],
+  downloadUrl: '',
   imageUrl: '',
   input: '',
   inputSize: 416,
   isSignedIn: false,
   route: 'SignIn',
   scoreThreshold: 0.5,
-  showCanvas: true,
+  showCanvas: false,
+  showDetailedResults: false,
   showImg: false,
   withScore: true,
   user: {
@@ -48,7 +52,7 @@ class App extends Component {
   async componentDidMount() {
     await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
     await faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models');
-    console.log('Face detection models loaded.');
+    // console.log('Face detection models loaded.');
   }
 
   loadUser = (data) => {
@@ -69,15 +73,21 @@ class App extends Component {
 
   onUrlButtonSubmit = () => {
     const { input } = this.state;
-    this.setState({ imageUrl: input }, () => {
-      const checkWidth = this.inputImageRef.current.width;
-      if (checkWidth === 0) {
-        const updatedUrl = `${CORS_PROXY_URI}/${input}`;
-        this.setState({ imageUrl: updatedUrl }, () => {
-          // console.log('using CORS proxy', updatedUrl);
+    this.setState({ imageUrl: '' }, () => { // reset to avoid detecting width of previous image
+      this.setState({ imageUrl: input }, () => {
+        const checkWidth = this.inputImageRef.current.width;
+        if (checkWidth === 0) {
+          const updatedUrl = `${CORS_PROXY_URI}/${input}`;
+          this.setState({ imageUrl: updatedUrl }, () => {
+            // console.log('using CORS proxy', updatedUrl);
+          });
+        }
+        this.setState({
+          detections: [],
+          showImg: true,
+          showCanvas: false,
         });
-      }
-      this.setState({ showImg: true, showCanvas: false });
+      });
     });
   }
 
@@ -85,6 +95,7 @@ class App extends Component {
     const file = files[0];
     const imageUrl = URL.createObjectURL(file);
     this.setState({
+      detections: [],
       imageUrl,
       showImg: true,
       showCanvas: false,
@@ -159,13 +170,21 @@ class App extends Component {
     const detections = await faceapi
       .detectAllFaces(img, detectorOptions)
       .withFaceLandmarks(useTinyModel);
-    console.log('Detections:', detections);
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
+    // console.log('Detections:', detections);
+    // console.log('Resized:', resizedDetections);
+    this.setState({ detections: resizedDetections });
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
     faceapi.draw.drawDetections(canvas, resizedDetections, withScore);
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-    this.setState({ showImg: false, showCanvas: true });
+
+    this.outputCanvasRef.current.toBlob((blob) => {
+      const downloadUrl = URL.createObjectURL(blob);
+      this.setState({ downloadUrl, showImg: false, showCanvas: true }, () => {
+        window.scrollTo({ top: document.body.clientHeight, behavior: 'smooth' });
+      });
+    }, 'image/png');
 
     await fetch(`${FACE_FINDER_API_URI}/image`, {
       method: 'put',
@@ -181,18 +200,26 @@ class App extends Component {
       });
   }
 
+  handleDetailedResultsButtonClick = () => {
+    const { showDetailedResults } = this.state;
+    this.setState({ showDetailedResults: !showDetailedResults });
+  }
+
   render() {
     const {
-      user,
+      canvasHeight,
+      canvasWidth,
+      detections,
+      downloadUrl,
+      imageUrl,
+      inputSize,
       isSignedIn,
       route,
-      inputSize,
       scoreThreshold,
-      imageUrl,
-      canvasWidth,
-      canvasHeight,
-      showImg,
       showCanvas,
+      showDetailedResults,
+      showImg,
+      user,
     } = this.state;
 
     const renderBackground = (
@@ -244,6 +271,13 @@ class App extends Component {
           canvasHeight={canvasHeight}
           canvasWidth={canvasWidth}
           showCanvas={showCanvas}
+        />
+        <DetectionResults
+          detections={detections}
+          downloadUrl={downloadUrl}
+          handleDetailedResultsButtonClick={this.handleDetailedResultsButtonClick}
+          showCanvas={showCanvas}
+          showDetailedResults={showDetailedResults}
         />
       </div>
     );
