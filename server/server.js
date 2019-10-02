@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './server/.env' }); // import environment variables from .env file
+require('dotenv').config(); // import environment variables from .env file
 // external modules to handle HTTP and connect to database
 const express = require('express');
 const cors = require('cors');
@@ -11,7 +11,6 @@ const {
   API_PORT = 3001,
   CORS_PROXY_HOST = '127.0.0.1',
   CORS_PROXY_PORT = 8080,
-  DB_TYPE = 'pg',
   DB_HOST = '127.0.0.1',
   DB_NAME = 'face-finder',
   DB_USER,
@@ -19,7 +18,7 @@ const {
 } = process.env;
 
 const db = knex({
-  client: DB_TYPE,
+  client: 'pg',
   connection: {
     host: DB_HOST,
     user: DB_USER,

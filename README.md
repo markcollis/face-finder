@@ -16,7 +16,7 @@ Install dependencies:
 ```
 yarn install
 ```
-Configure a PostgreSQL or MySQL database with two tables:
+Configure a PostgreSQL database with two tables:
 ```
 login (
     id integer NOT NULL,
@@ -31,12 +31,11 @@ users (
     joined timestamp without time zone NOT NULL
 );
 ```
-Create a file server/.env populated with the following:
+Create a file .env populated with the following:
 ```
 CORS_PROXY_HOST="xxx" (default "127.0.0.1")
 CORS_PROXY_PORT=n (default 8080)
 API_PORT=n (default 3001)
-DB_TYPE="xxx" (default "pg")
 DB_HOST="xxx" (default "127.0.0.1")
 DB_NAME="xxx" (default "face-finder")
 DB_USER="xxx"
