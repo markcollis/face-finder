@@ -16,14 +16,14 @@ Install dependencies:
 ```
 yarn install
 ```
-Configure a PostgreSQL database with two tables:
+Configure a PostgreSQL or MySQL database with two tables:
 ```
-CREATE TABLE public.login (
+login (
     id integer NOT NULL,
     hash character varying(100) NOT NULL,
     email text NOT NULL
 );
-CREATE TABLE public.users (
+users (
     id integer NOT NULL,
     name character varying(100),
     email text NOT NULL,
@@ -36,6 +36,7 @@ Create a file server/.env populated with the following:
 CORS_PROXY_HOST="xxx" (default "127.0.0.1")
 CORS_PROXY_PORT=n (default 8080)
 API_PORT=n (default 3001)
+DB_TYPE="xxx" (default "pg")
 DB_HOST="xxx" (default "127.0.0.1")
 DB_NAME="xxx" (default "face-finder")
 DB_USER="xxx"

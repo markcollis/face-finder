@@ -11,6 +11,7 @@ const {
   API_PORT = 3001,
   CORS_PROXY_HOST = '127.0.0.1',
   CORS_PROXY_PORT = 8080,
+  DB_TYPE = 'pg',
   DB_HOST = '127.0.0.1',
   DB_NAME = 'face-finder',
   DB_USER,
@@ -18,7 +19,7 @@ const {
 } = process.env;
 
 const db = knex({
-  client: 'pg',
+  client: DB_TYPE,
   connection: {
     host: DB_HOST,
     user: DB_USER,
