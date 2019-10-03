@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import DetailedResult from '../DetailedResult/DetailedResult';
+import img68Points from './68points.jpg';
 
 const DetectionResults = ({
   detections,
@@ -12,16 +13,7 @@ const DetectionResults = ({
 }) => {
   if (!showCanvas) return null;
   const detectionsCount = detections.length;
-  if (detectionsCount === 0) {
-    return (
-      <div className="ma4 formwidth">
-        <p>
-          Sorry, no faces were found in this picture. Try changing the input size and/or
-          confidence threshold parameters.
-        </p>
-      </div>
-    );
-  }
+  if (detectionsCount === 0) return null;
 
   const renderDetailedResultsButton = (detectionsCount > 0)
     ? (
@@ -48,6 +40,14 @@ const DetectionResults = ({
         <ul className="list pl0">
           {detailedResultsArray}
         </ul>
+        <div className="pv2 tl mt1 mb1 bl-0 br-0 bb-0 b--dotted b--black-30">
+          <img src={img68Points} alt="layout of the 68 points" />
+          <p className="f6 i">(picture credit: Intelligent Behaviour Understanding Group, Imperial College)</p>
+          <p>
+            This is where the 68 facial landmarks, which are commonly used to train and compare
+            face recognition algorithms, are located on a generic face.
+          </p>
+        </div>
       </div>
     )
     : '';

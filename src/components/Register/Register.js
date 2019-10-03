@@ -43,7 +43,8 @@ class Register extends Component {
           loadUser(user);
           onRouteChange('Main');
         } else {
-          console.log('Error - response does not have id:', user);
+          /* eslint no-console: 0 */
+          console.log('Error - response without id:', user);
         }
       })
       .catch((err) => {

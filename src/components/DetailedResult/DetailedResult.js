@@ -20,7 +20,7 @@ const DetailedResult = ({ detection }) => {
   const renderLandmarks = positions.map(position => `[${position.x.toFixed(2)},${position.y.toFixed(2)}]`).join(', ');
 
   return (
-    <li className="f6 pv2 tl mt1 mb1 bl-0 br-0 b--dotted b--black-30">
+    <li className="f6 pv2 tl mt1 mb1 bl-0 br-0 bb-0 b--dotted b--black-30">
       <div className="pv1">
         {`A face was detected with ${percentConfidence}% confidence between [${left.toFixed()},${top.toFixed()}] and [${right.toFixed()},${bottom.toFixed()}] in this ${imageWidth} x ${imageHeight} image.`}
       </div>

@@ -8,6 +8,7 @@ import ImageFaceDetectForm from './components/ImageFaceDetectForm/ImageFaceDetec
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import InputImage from './components/InputImage/InputImage';
 import Navigation from './components/Navigation/Navigation';
+import NoFacesFound from './components/NoFacesFound/NoFacesFound';
 import OutputCanvas from './components/OutputCanvas/OutputCanvas';
 import Profile from './components/Profile/Profile';
 import Rank from './components/Rank/Rank';
@@ -75,11 +76,12 @@ class App extends Component {
     const { input } = this.state;
     this.setState({ imageUrl: '' }, () => { // reset to avoid detecting width of previous image
       this.setState({ imageUrl: input }, () => {
+        // console.log('imageUrl:', input);
         const checkWidth = this.inputImageRef.current.width;
         if (checkWidth === 0) {
           const updatedUrl = `${CORS_PROXY_URI}/${input}`;
           this.setState({ imageUrl: updatedUrl }, () => {
-            // console.log('using CORS proxy', updatedUrl);
+            // console.log('using CORS proxy:', updatedUrl);
           });
         }
         this.setState({
@@ -182,7 +184,9 @@ class App extends Component {
     this.outputCanvasRef.current.toBlob((blob) => {
       const downloadUrl = URL.createObjectURL(blob);
       this.setState({ downloadUrl, showImg: false, showCanvas: true }, () => {
-        window.scrollTo({ top: document.body.clientHeight, behavior: 'smooth' });
+        if (detections.length > 0) {
+          window.scrollTo({ top: document.body.clientHeight, behavior: 'smooth' });
+        }
       });
     }, 'image/png');
 
@@ -195,6 +199,7 @@ class App extends Component {
       .then((count) => {
         this.setState(Object.assign(user, { entries: count }));
       })
+      /* eslint no-console: 0 */
       .catch((err) => {
         console.log('Error:', err.message);
       });
@@ -246,7 +251,7 @@ class App extends Component {
     );
     const renderMain = (
       <div>
-        <Rank name={user.name} entries={user.entries} />
+        <Rank name={user.name} entries={user.entries.toString()} />
         <ImageLinkForm
           onInputChange={this.onUrlInputChange}
           onButtonSubmit={this.onUrlButtonSubmit}
@@ -261,6 +266,7 @@ class App extends Component {
           onIncreaseThreshold={this.onIncreaseThreshold}
           onDecreaseThreshold={this.onDecreaseThreshold}
         />
+        <NoFacesFound detectionsCount={detections.length} showCanvas={showCanvas} />
         <InputImage
           ref={this.inputImageRef}
           imageUrl={imageUrl}

@@ -37,7 +37,8 @@ class SignIn extends Component {
           loadUser(user);
           onRouteChange('Main');
         } else {
-          console.log('Error - user without id:', user);
+          /* eslint no-console: 0 */
+          console.log('Error - response without id:', user);
         }
       })
       .catch((err) => {
