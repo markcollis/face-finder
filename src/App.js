@@ -118,13 +118,13 @@ class App extends Component {
 
   onIncreaseThreshold = () => {
     const { scoreThreshold } = this.state;
-    const newScoreThreshold = Math.min(faceapi.round(scoreThreshold + 0.1), 1.0);
+    const newScoreThreshold = Math.min((scoreThreshold + 0.1), 1.0);
     this.setState({ scoreThreshold: newScoreThreshold });
   }
 
   onDecreaseThreshold = () => {
     const { scoreThreshold } = this.state;
-    const newScoreThreshold = Math.max(faceapi.round(scoreThreshold - 0.1), 0.1);
+    const newScoreThreshold = Math.max((scoreThreshold - 0.1), 0.1);
     this.setState({ scoreThreshold: newScoreThreshold });
   }
 

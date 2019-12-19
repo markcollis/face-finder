@@ -22,7 +22,7 @@ const handleRegisterPost = (bcrypt, db) => (req, res) => {
             name,
             joined: new Date(),
           })
-          .then(user => res.json(user[0]));
+          .then((user) => res.json(user[0]));
       })
       .then(trx.commit)
       .catch(trx.rollback);

@@ -1,5 +1,5 @@
 /* eslint no-console: 0 */
-const handleImagePut = db => (req, res) => {
+const handleImagePut = (db) => (req, res) => {
   console.log('Processing /image request');
   const { id } = req.body;
   db('users').where('id', '=', id)

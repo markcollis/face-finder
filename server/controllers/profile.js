@@ -1,5 +1,5 @@
 /* eslint no-console: 0 */
-const handleProfileGet = db => (req, res) => {
+const handleProfileGet = (db) => (req, res) => {
   console.log('Processing /profile/:id request');
   const { id } = req.params;
   db.select('*').from('users').where({ id })
