@@ -19,12 +19,12 @@ yarn install
 Configure a PostgreSQL database with two tables:
 ```
 login (
-    id integer NOT NULL,
+    id SERIAL,
     hash character varying(100) NOT NULL,
     email text NOT NULL
 );
 users (
-    id integer NOT NULL,
+    id SERIAL,
     name character varying(100),
     email text NOT NULL,
     entries bigint DEFAULT 0,
